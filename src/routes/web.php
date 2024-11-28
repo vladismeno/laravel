@@ -6,7 +6,7 @@ Route::get('/', function () {
     $res = 1 + 3;
     $name = 'svs';
     return view('home', compact('res', 'name'));
-});
+})->name('home');
 
 
 Route::get('/about', function () {
@@ -32,13 +32,13 @@ Route::post('/send-email', function () {
     return view('contact');
 });*/
 
-/*Route::match(['get', 'post'], '/contact', function () {
+Route::match(['get', 'post', 'put'], '/contact', function () {
     if (!empty($_POST)) {
         dump($_POST);
     }
 
     return view('contact');
-})->name('contact');*/
+})->name('contact');
 
 //Route::view('/test', 'test', ['test' => 'Test Data']);
 
@@ -47,3 +47,37 @@ Route::post('/send-email', function () {
 
 //Route::permanentRedirect('about', 'contact');
 
+
+/*Route::get('/post/{id}', function ($id) {
+    return "Post {$id}";
+});*/
+
+/*Route::get('/post/{id}/{slug}', function ($id, $slug) {
+    return "Post $id | $slug";
+})->where(['id' => '[0-9]+', 'slug' => '[A-Za-z0-9-]+']);*/
+
+
+Route::get('/post/{id}/{slug?}', function ($id, $slug = null) {
+    return "Post $id | $slug";
+})->name('post');
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/posts', function () {
+        return 'Post List';
+    });
+
+    Route::get('/post/create', function () {
+        return 'Post Create';
+    });
+
+    Route::get('/post/{id}/edit', function ($id) {
+        return "Edit Post $id";
+    })->name('post');
+});
+
+
+Route::fallback(function () {
+    abort(404, 'Oops! Page not found!');
+//    return redirect()->route('home');
+});
